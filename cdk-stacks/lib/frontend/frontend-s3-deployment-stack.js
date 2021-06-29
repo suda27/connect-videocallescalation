@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FrontendS3DeploymentStack = void 0;
+// Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+const cdk = require("@aws-cdk/core");
+const s3deployment = require("@aws-cdk/aws-s3-deployment");
+const configParams = require('../../config.params.json');
+class FrontendS3DeploymentStack extends cdk.NestedStack {
+    constructor(scope, id, props) {
+        super(scope, id, props);
+        const agentAppDeployment = new s3deployment.BucketDeployment(this, `${props.cdkAppName}-AgentAppDeployment`, {
+            destinationBucket: props.webAppBucket,
+            retainOnDelete: false,
+            destinationKeyPrefix: configParams['WebAppRootPrefix'],
+            sources: [
+                s3deployment.Source.asset('../agent-app/build'),
+                s3deployment.Source.asset('../demo-website/build'),
+                s3deployment.Source.bucket(props.webAppBucket, `${configParams['WebAppStagingPrefix']}frontend-config.zip`)
+            ]
+        });
+    }
+}
+exports.FrontendS3DeploymentStack = FrontendS3DeploymentStack;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZnJvbnRlbmQtczMtZGVwbG95bWVudC1zdGFjay5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImZyb250ZW5kLXMzLWRlcGxveW1lbnQtc3RhY2sudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsMEVBQTBFO0FBQzFFLGlDQUFpQztBQUNqQyxxQ0FBcUM7QUFDckMsMkRBQTJEO0FBRzNELE1BQU0sWUFBWSxHQUFHLE9BQU8sQ0FBQywwQkFBMEIsQ0FBQyxDQUFDO0FBT3pELE1BQWEseUJBQTBCLFNBQVEsR0FBRyxDQUFDLFdBQVc7SUFJMUQsWUFBWSxLQUFvQixFQUFFLEVBQVUsRUFBRSxLQUFxQztRQUMvRSxLQUFLLENBQUMsS0FBSyxFQUFFLEVBQUUsRUFBRSxLQUFLLENBQUMsQ0FBQztRQUV4QixNQUFNLGtCQUFrQixHQUFHLElBQUksWUFBWSxDQUFDLGdCQUFnQixDQUFDLElBQUksRUFBRSxHQUFHLEtBQUssQ0FBQyxVQUFVLHFCQUFxQixFQUFFO1lBQ3pHLGlCQUFpQixFQUFFLEtBQUssQ0FBQyxZQUFZO1lBQ3JDLGNBQWMsRUFBRSxLQUFLO1lBQ3JCLG9CQUFvQixFQUFFLFlBQVksQ0FBQyxrQkFBa0IsQ0FBQztZQUN0RCxPQUFPLEVBQUU7Z0JBQ0wsWUFBWSxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsb0JBQW9CLENBQUM7Z0JBQy9DLFlBQVksQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLHVCQUF1QixDQUFDO2dCQUNsRCxZQUFZLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsWUFBWSxFQUFFLEdBQUcsWUFBWSxDQUFDLHFCQUFxQixDQUFDLHFCQUFxQixDQUFDO2FBQzlHO1NBQ0osQ0FBQyxDQUFDO0lBQ1AsQ0FBQztDQUNKO0FBbEJELDhEQWtCQyIsInNvdXJjZXNDb250ZW50IjpbIi8vIENvcHlyaWdodCAyMDIxIEFtYXpvbi5jb20sIEluYy4gb3IgaXRzIGFmZmlsaWF0ZXMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQuXG4vLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogTUlULTBcbmltcG9ydCAqIGFzIGNkayBmcm9tICdAYXdzLWNkay9jb3JlJztcbmltcG9ydCAqIGFzIHMzZGVwbG95bWVudCBmcm9tIFwiQGF3cy1jZGsvYXdzLXMzLWRlcGxveW1lbnRcIjtcbmltcG9ydCAqIGFzIHMzIGZyb20gXCJAYXdzLWNkay9hd3MtczNcIjtcblxuY29uc3QgY29uZmlnUGFyYW1zID0gcmVxdWlyZSgnLi4vLi4vY29uZmlnLnBhcmFtcy5qc29uJyk7XG5cbmV4cG9ydCBpbnRlcmZhY2UgRnJvbnRlbmRTM0RlcGxveW1lbnRTdGFja1Byb3BzIGV4dGVuZHMgY2RrLk5lc3RlZFN0YWNrUHJvcHMge1xuICAgIHJlYWRvbmx5IGNka0FwcE5hbWU6IHN0cmluZztcbiAgICByZWFkb25seSB3ZWJBcHBCdWNrZXQ6IHMzLklCdWNrZXQ7XG59XG5cbmV4cG9ydCBjbGFzcyBGcm9udGVuZFMzRGVwbG95bWVudFN0YWNrIGV4dGVuZHMgY2RrLk5lc3RlZFN0YWNrIHtcblxuICAgIHB1YmxpYyByZWFkb25seSB3ZWJBcHBCdWNrZXQ6IHMzLklCdWNrZXQ7XG5cbiAgICBjb25zdHJ1Y3RvcihzY29wZTogY2RrLkNvbnN0cnVjdCwgaWQ6IHN0cmluZywgcHJvcHM6IEZyb250ZW5kUzNEZXBsb3ltZW50U3RhY2tQcm9wcykge1xuICAgICAgICBzdXBlcihzY29wZSwgaWQsIHByb3BzKTtcblxuICAgICAgICBjb25zdCBhZ2VudEFwcERlcGxveW1lbnQgPSBuZXcgczNkZXBsb3ltZW50LkJ1Y2tldERlcGxveW1lbnQodGhpcywgYCR7cHJvcHMuY2RrQXBwTmFtZX0tQWdlbnRBcHBEZXBsb3ltZW50YCwge1xuICAgICAgICAgICAgZGVzdGluYXRpb25CdWNrZXQ6IHByb3BzLndlYkFwcEJ1Y2tldCxcbiAgICAgICAgICAgIHJldGFpbk9uRGVsZXRlOiBmYWxzZSxcbiAgICAgICAgICAgIGRlc3RpbmF0aW9uS2V5UHJlZml4OiBjb25maWdQYXJhbXNbJ1dlYkFwcFJvb3RQcmVmaXgnXSxcbiAgICAgICAgICAgIHNvdXJjZXM6IFtcbiAgICAgICAgICAgICAgICBzM2RlcGxveW1lbnQuU291cmNlLmFzc2V0KCcuLi9hZ2VudC1hcHAvYnVpbGQnKSxcbiAgICAgICAgICAgICAgICBzM2RlcGxveW1lbnQuU291cmNlLmFzc2V0KCcuLi9kZW1vLXdlYnNpdGUvYnVpbGQnKSxcbiAgICAgICAgICAgICAgICBzM2RlcGxveW1lbnQuU291cmNlLmJ1Y2tldChwcm9wcy53ZWJBcHBCdWNrZXQsIGAke2NvbmZpZ1BhcmFtc1snV2ViQXBwU3RhZ2luZ1ByZWZpeCddfWZyb250ZW5kLWNvbmZpZy56aXBgKVxuICAgICAgICAgICAgXVxuICAgICAgICB9KTtcbiAgICB9XG59Il19
